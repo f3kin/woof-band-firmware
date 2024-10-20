@@ -1,8 +1,8 @@
-#include <Arduino.h>
-#include <WiFi.h>
+# const char* ssid = "Aussie Broadband 5699";
+# const char* password = "Nahfyscfnu";
 
-const char* ssid = "Aussie Broadband 5699";
-const char* password = "Nahfyscfnu";
+const char* ssid = "Molly1";
+const char* password = "8hobartave";
 
 void setup() {
   Serial.begin(115200);

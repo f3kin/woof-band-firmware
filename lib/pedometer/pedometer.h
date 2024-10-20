@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <MPU6050.h>
 #include "esp_timer.h"
 #include "MyMPU.h"
 
@@ -38,7 +37,7 @@ int max_curr_accel_x, max_curr_accel_y, max_curr_accel_z;
 int dy_thres_accel_x = 0, dy_thres_accel_y = 0, dy_thres_accel_z = 0;
 int dy_chan_accel_x, dy_chan_accel_y, dy_chan_accel_z;
 int sample_new = 0, sample_old = 0;
-int step_size = 200;
+int step_size = 75;
 int active_axis = 0, interval = 500000;
 int step_changed = 0;
 
@@ -52,7 +51,13 @@ float mapping(float x, float in_min, float in_max, float out_min, float out_max)
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-void step_counter() {
+struct AccelData {
+  int x;
+  int y;
+  int z;
+};
+
+AccelData step_counter() {
   // Retrieve raw data from MPU6050
   mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 
@@ -197,6 +202,15 @@ void step_counter() {
     Serial.println(step_count);
     step_changed = 0;
   }
+
+  AccelData data;
+  // Set the values in the struct
+  data.x = accel_x_avg;
+  data.y = accel_y_avg;
+  data.z = accel_z_avg;
+
+  // Return the struct
+  return data;
 }
 
 #endif

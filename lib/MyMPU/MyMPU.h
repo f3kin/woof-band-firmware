@@ -13,20 +13,34 @@
 MPU6050 mpu;
 
 inline void mpu6050_calibrate(float* accel_bias_res, float* gyro_bias_res) {
-    double accel_bias[3] = {0, 0, 0};
-    double gyro_bias[3] = {0, 0, 0};
-
-    // Adjusting for biases
+    // Calibrate the accelerometer and gyroscope
     mpu.CalibrateAccel(6);  // Calibrate accelerometer, 6 iterations
     mpu.CalibrateGyro(6);   // Calibrate gyroscope, 6 iterations
 
-    accel_bias_res[0] = accel_bias[0];
-    accel_bias_res[1] = accel_bias[1];
-    accel_bias_res[2] = accel_bias[2];
+    // Retrieve bias values from the MPU6050
+    accel_bias_res[0] = mpu.getXAccelOffset();
+    accel_bias_res[1] = mpu.getYAccelOffset();
+    accel_bias_res[2] = mpu.getZAccelOffset();
 
-    gyro_bias_res[0] = gyro_bias[0];
-    gyro_bias_res[1] = gyro_bias[1];
-    gyro_bias_res[2] = gyro_bias[2];
+    gyro_bias_res[0] = mpu.getXGyroOffset();
+    gyro_bias_res[1] = mpu.getYGyroOffset();
+    gyro_bias_res[2] = mpu.getZGyroOffset();
+
+    // Print the calibration results to verify the values
+    Serial.print("Accel Bias :");
+    Serial.print(accel_bias_res[0]);
+    Serial.print(",");
+    Serial.print(accel_bias_res[1]);
+    Serial.print(",");
+    Serial.print(accel_bias_res[2]);
+    Serial.print(", ");
+    Serial.print("Gyro Bias :");
+    Serial.print(gyro_bias_res[0]);
+    Serial.print(",");
+    Serial.print(gyro_bias_res[1]);
+    Serial.print(",");
+    Serial.print(gyro_bias_res[2]);
+    Serial.println("");
 }
 
 inline void mpu6050_madgwick_quaternion_update(float accel_x,
